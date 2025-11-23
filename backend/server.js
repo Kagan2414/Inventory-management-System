@@ -10,8 +10,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-   origin: "*",
-   methods: "GET,POST,PUT,DELETE"
+   origin: process.env.FRONTEND_URL || "*",
+   methods: "GET,POST,PUT,DELETE",
+   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,15 +20,18 @@ app.use(express.urlencoded({ extended: true }));
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
+  fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// Database path - use /opt/render/project/src for Render
+const dbPath = process.env.DATABASE_PATH || './inventory.db';
+
 // Database initialization
-const db = new sqlite3.Database('./inventory.db', (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err);
   } else {
-    console.log('Connected to SQLite database');
+    console.log('Connected to SQLite database at:', dbPath);
     initializeDatabase();
   }
 });
@@ -47,7 +51,7 @@ function initializeDatabase() {
       image TEXT
     )`, (err) => {
       if (err) console.error('Error creating products table:', err);
-      else console.log('Products table ready');
+      else console.log('✓ Products table ready');
     });
 
     // Inventory history table
@@ -61,7 +65,7 @@ function initializeDatabase() {
       FOREIGN KEY(product_id) REFERENCES products(id)
     )`, (err) => {
       if (err) console.error('Error creating history table:', err);
-      else console.log('History table ready');
+      else console.log('✓ History table ready');
     });
 
     // Users table (for authentication)
@@ -73,7 +77,7 @@ function initializeDatabase() {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
       if (err) console.error('Error creating users table:', err);
-      else console.log('Users table ready');
+      else console.log('✓ Users table ready');
     });
   });
 }
@@ -83,12 +87,23 @@ const authRouter = require('./routes/auth');
 const productsRouter = require('./routes/products');
 const authenticateToken = require('./middleware/auth');
 
-// Routes - Set up AFTER db is declared
+// Routes
 app.use('/api/auth', authRouter(db));
+// Enable authentication in production
+if (process.env.NODE_ENV === 'production') {
+  app.use('/api/products', authenticateToken, productsRouter(db));
+} else {
+  app.use('/api/products', productsRouter(db)); // Without auth for development
+}
 
-// IMPORTANT: Comment out authentication for testing, uncomment for production
-// app.use('/api/products', authenticateToken, productsRouter(db)); // With auth
-app.use('/api/products', productsRouter(db)); // Without auth (for testing)
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Basic test route
 app.get('/', (req, res) => {
@@ -96,6 +111,7 @@ app.get('/', (req, res) => {
     message: 'Inventory Management API',
     version: '1.0.0',
     endpoints: {
+      health: '/health',
       auth: '/api/auth',
       products: '/api/products'
     }
@@ -114,22 +130,28 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`✓ Server running on http://localhost:${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✓ Server running on port ${PORT}`);
+  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`✓ API available at http://localhost:${PORT}/api`);
 });
 
 // Graceful shutdown
-process.on('SIGINT', () => {
+const gracefulShutdown = () => {
   console.log('\nShutting down gracefully...');
-  db.close((err) => {
-    if (err) {
-      console.error('Error closing database:', err);
-    } else {
-      console.log('Database connection closed');
-    }
-    process.exit(0);
+  server.close(() => {
+    db.close((err) => {
+      if (err) {
+        console.error('Error closing database:', err);
+      } else {
+        console.log('Database connection closed');
+      }
+      process.exit(0);
+    });
   });
-});
+};
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
 module.exports = { app, db };

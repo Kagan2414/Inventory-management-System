@@ -1,0 +1,32 @@
+mkdir uploads
+touch uploads/.gitkeep
+```
+
+### Step 1.2: Deploy to Render
+
+#### Option A: Using Render Dashboard
+
+1. **Create Account**: Go to [render.com](https://render.com) and sign up
+
+2. **New Web Service**: 
+   - Click "New +" → "Web Service"
+   - Connect your GitHub/GitLab repository
+   - Select your backend repository
+
+3. **Configure Service**:
+```
+   Name: inventory-api
+   Environment: Node
+   Region: Choose closest to you
+   Branch: main
+   Root Directory: backend (if in monorepo) or leave empty
+   Build Command: npm install
+   Start Command: npm start
+```
+
+4. **Add Environment Variables**:
+```
+   NODE_ENV=production
+   JWT_SECRET=your-super-secret-jwt-key-change-this-randomly-generated
+   FRONTEND_URL=https://your-frontend-url.netlify.app
+   DATABASE_PATH=/opt/render/project/src/inventory.db
