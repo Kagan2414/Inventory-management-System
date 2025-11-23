@@ -3,7 +3,7 @@ import api from '../api';
 
 export default function ImportExport({ onImported }) {
   const fileRef = useRef();
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const trigger = () => fileRef.current.click();
 
