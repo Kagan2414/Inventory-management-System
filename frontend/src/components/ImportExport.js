@@ -1,9 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import api from '../api';
 
 export default function ImportExport({ onImported }) {
   const fileRef = useRef();
-  const [, setLoading] = useState(false);
 
   const trigger = () => fileRef.current.click();
 
@@ -15,14 +14,11 @@ export default function ImportExport({ onImported }) {
     fd.append('csvFile', file);
 
     try {
-      setLoading(true);
       const res = await api.post('/products/import', fd);
       alert(`Imported: ${res.data.added} added, ${res.data.skipped} skipped`);
       onImported();
     } catch {
       alert('Import failed');
-    } finally {
-      setLoading(false);
     }
   };
 
