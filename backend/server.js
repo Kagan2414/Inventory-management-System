@@ -9,14 +9,24 @@ const PORT = process.env.PORT || 5000;
 
 const cors = require("cors");
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://inventory-management-system-seven-rouge.vercel.app"
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://inventory-management-system-seven-rouge.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("❌ CORS blocked:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,POST,PUT,DELETE",
-  credentials: true,
+  credentials: true
 }));
+
 
 
 app.use(express.json());
