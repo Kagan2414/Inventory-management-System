@@ -531,3 +531,38 @@ select.input {
     border: none;
   }
 }
+
+/* Add to index.css - Enhanced mobile table */
+@media (max-width: 767px) {
+  /* Stack table for mobile */
+  .table thead {
+    display: none;
+  }
+  
+  .table, .table tbody, .table tr, .table td {
+    display: block;
+    width: 100%;
+  }
+  
+  .table tr {
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+  }
+  
+  .table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+}
