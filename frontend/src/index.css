@@ -1,0 +1,533 @@
+/* =============================
+   Modern Dark Theme Variables
+============================= */
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #121212;
+  --bg-tertiary: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --bg-hover: #252525;
+  
+  --border-color: #2a2a2a;
+  --border-hover: #3a3a3a;
+  
+  --text-primary: #e8e8e8;
+  --text-secondary: #a8a8a8;
+  --text-muted: #707070;
+  
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-orange: #f59e0b;
+  --accent-purple: #a855f7;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================
+   Base Styles
+============================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, #0f0f0f 100%);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* =============================
+   Container & Layout
+============================= */
+.app-wrapper {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-secondary);
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+/* =============================
+   Layout Grid (Responsive)
+============================= */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 2.5fr 1fr;
+  }
+}
+
+/* =============================
+   Buttons
+============================= */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, #2563eb 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--accent-red) 0%, #dc2626 100%);
+  color: white;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--accent-orange) 0%, #ea580c 100%);
+  color: white;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.btn-light {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-light:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* =============================
+   Inputs & Form Controls
+============================= */
+.input {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: var(--bg-tertiary);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+select.input {
+  cursor: pointer;
+}
+
+/* =============================
+   Table (Responsive)
+============================= */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.table th {
+  background: var(--bg-tertiary);
+  padding: 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.table tbody tr {
+  background: var(--bg-card);
+  transition: var(--transition);
+}
+
+.table tbody tr:hover {
+  background: var(--bg-hover);
+  transform: scale(1.005);
+}
+
+.table td .input {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.table td .btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.status-in {
+  color: var(--accent-green);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-in::before {
+  content: '●';
+  font-size: 18px;
+}
+
+.status-out {
+  color: var(--accent-red);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-out::before {
+  content: '●';
+  font-size: 18px;
+}
+
+/* =============================
+   Cards
+============================= */
+.card {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.card h3 {
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* =============================
+   Sidebar
+============================= */
+.sidebar {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar h3 {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--border-color);
+  z-index: 5;
+}
+
+.sidebar .card {
+  margin-top: 12px;
+  background: var(--bg-tertiary);
+}
+
+/* =============================
+   Section & Spacing
+============================= */
+.section {
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* =============================
+   Animations
+============================= */
+.fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================
+   Scrollbar Styling
+============================= */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--bg-secondary);
+  transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+/* =============================
+   Loading States
+============================= */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* =============================
+   Hidden Utility
+============================= */
+.hidden {
+  display: none !important;
+}
+
+/* =============================
+   Responsive Breakpoints
+============================= */
+
+/* Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+  .container {
+    padding: 24px;
+  }
+  
+  .container h1 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+  }
+  
+  .section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .section > * {
+    width: 100%;
+  }
+  
+  .sidebar {
+    max-height: 500px;
+  }
+}
+
+/* Mobile (max 767px) */
+@media (max-width: 767px) {
+  .app-wrapper {
+    padding: 12px;
+  }
+  
+  .container {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+  
+  .container h1 {
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+  }
+  
+  .table {
+    min-width: 600px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .table td .btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .sidebar {
+    max-height: 400px;
+  }
+}
+
+/* Extra Small Mobile (max 480px) */
+@media (max-width: 480px) {
+  .container h1 {
+    font-size: 1.5rem;
+  }
+  
+  .section {
+    gap: 8px;
+  }
+  
+  .btn {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+  
+  .input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* =============================
+   Print Styles
+============================= */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .btn,
+  .sidebar {
+    display: none;
+  }
+  
+  .container {
+    box-shadow: none;
+    border: none;
+  }
+}
