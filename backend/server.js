@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
@@ -8,13 +7,17 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware - CORS must be configured before routes
+const cors = require("cors");
+
 app.use(cors({
-   origin: process.env.FRONTEND_URL || "*",
-   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-   credentials: true,
-   allowedHeaders: ["Content-Type", "Authorization"]
+  origin: [
+    "http://localhost:3000",
+    "https://inventory-management-system-seven-rouge.vercel.app"
+  ],
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
