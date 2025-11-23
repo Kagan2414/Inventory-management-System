@@ -8,12 +8,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Middleware - CORS must be configured before routes
 app.use(cors({
    origin: process.env.FRONTEND_URL || "*",
-   methods: "GET,POST,PUT,DELETE",
-   credentials: true
+   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+   credentials: true,
+   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,8 +25,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Database path - use /opt/render/project/src for Render
-const dbPath = process.env.DATABASE_PATH || './inventory.db';
+// Database path - use environment variable or default
+const dbPath = process.env.DATABASE_PATH || path.join(__dirname, 'inventory.db');
 
 // Database initialization
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -87,16 +89,7 @@ const authRouter = require('./routes/auth');
 const productsRouter = require('./routes/products');
 const authenticateToken = require('./middleware/auth');
 
-// Routes
-app.use('/api/auth', authRouter(db));
-// Enable authentication in production
-if (process.env.NODE_ENV === 'production') {
-  app.use('/api/products', authenticateToken, productsRouter(db));
-} else {
-  app.use('/api/products', productsRouter(db)); // Without auth for development
-}
-
-// Health check endpoint
+// Health check endpoint (before other routes)
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK',
@@ -118,15 +111,21 @@ app.get('/', (req, res) => {
   });
 });
 
+// Routes - Auth doesn't need authentication
+app.use('/api/auth', authRouter(db));
+
+// Products routes - ALWAYS use authentication
+app.use('/api/products', authenticateToken, productsRouter(db));
+
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ error: 'Route not found', path: req.path });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error('Error:', err.stack);
+  res.status(500).json({ error: 'Something went wrong!', message: err.message });
 });
 
 // Start server
@@ -134,6 +133,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`✓ Server running on port ${PORT}`);
   console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`✓ API available at http://localhost:${PORT}/api`);
+  console.log(`✓ Frontend URL: ${process.env.FRONTEND_URL || 'Not set'}`);
 });
 
 // Graceful shutdown
