@@ -30,3 +30,4 @@ touch uploads/.gitkeep
    JWT_SECRET=your-super-secret-jwt-key-change-this-randomly-generated
    FRONTEND_URL=https://your-frontend-url.netlify.app
    DATABASE_PATH=/opt/render/project/src/inventory.db
+```

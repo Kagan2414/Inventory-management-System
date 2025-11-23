@@ -1,0 +1,34 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "18"
+```
+
+#### Create `public/_redirects`
+```
+/*    /index.html   200
+```
+
+### Step 2.2: Deploy to Netlify
+
+#### Option A: Using Netlify Dashboard
+
+1. **Create Account**: Go to [netlify.com](https://netlify.com) and sign up
+
+2. **New Site**:
+   - Click "Add new site" → "Import an existing project"
+   - Connect to Git provider (GitHub/GitLab)
+   - Select your repository
+
+3. **Configure Build Settings**:
+```
+   Base directory: frontend (if monorepo) or leave empty
+   Build command: npm run build
+   Publish directory: build
